@@ -15,7 +15,6 @@ sin embargo, para que no crasheara la pagina, se pone condicional para seleccion
 el pais a mostrar.
 
 Nota.
-Toca poner desde el editor de código el pais, dado que el hook modifica 
-en tiempo real la url ocasionando crasheo; por tanto, a momento, toca escribirlo
-desde el editor.
-
+In this moment the "correctly" run is typing the country name in Englsh and press "F12" or right click then inspect to open the console and see the result.
+I´m steel trying to print in DOM the result. Looking for the result in React component.
+Updated: 11/08/21
