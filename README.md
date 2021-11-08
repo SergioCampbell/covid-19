@@ -10,6 +10,8 @@ para instalar el modulo y posterior a esto
 npm start
 ```
 
+live demo: [Here](https://sergiocampbell.github.io/covid-19/)
+
 Se consume la API y muestra el dato tanto global como por pais; 
 sin embargo, para que no crasheara la pagina, se pone condicional para seleccionar
 el pais a mostrar.
