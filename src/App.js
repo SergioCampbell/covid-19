@@ -5,7 +5,7 @@ import './App.css';
 
 export default function App() {
 
-  const [country, setCountry] = useState([{country:''}])
+  const [country, setCountry] = useState({country:''})
   const [location, setLocation] = useState([])
   const [total, setTotal] = useState([]) 
 
@@ -25,7 +25,7 @@ export default function App() {
           console.log(err)})
     }, [])
 
-    useEffect(() =>{
+    /* useEffect(() =>{
       axios.get(byCountry)
       .then((res)=> {
         //console.log(res)
@@ -34,25 +34,37 @@ export default function App() {
       .catch((err) => {
         console.log(err)})
     }, [byCountry])
-    
+     */
+
+    useEffect(() => {
+      getData()
+    }, [location])
+
+    //we put a async await to give time to load the new call
+    const getData = async () => {
+        const data = await fetch(byCountry)
+        const pais = await data.json()
+        setLocation(pais)
+    }
     //get value from select area or input area
       const countryHandler = (e) => {
         //console.log(e.target.value)
         setCountry({
-          ...country.name,
+          ...country.country,
           [e.target.name] : e.target.value
         })
       }
 
       const sendQuery = (e) => {
-        //e.preventDefault()
-        //console.log(country.name)
+        e.preventDefault()
+        setCountry(country)
+        console.log(location.All)
       }
 
-
+   
   return (
     <div className="App container mt-3 mb-5 bg-dark">
-      <h1>World Covid-19 data</h1>
+      <h1 className="display-2">World Covid-19 data</h1>
 
         <h2>Global data</h2>
         <table
@@ -72,26 +84,27 @@ export default function App() {
           </tr>
           </tbody>          
         </table>
-        <hr/>
 
-        <form className="form-group" onSubmit={sendQuery}>
-          <p>Select your country here</p>
+        <form className="form-group mt-5" onSubmit={sendQuery}>
+          <p>Search your country here</p>
           <input type="text"
             name="country"
-            value={ country.name }
+            value={ country.country }
             onChange={countryHandler}
+            placeholder="Colombia"
+            required
           />
-          <input type="submit" value="Search" onClick={() => countryHandler()}/>
+          <input type="submit" value="Search" />
           <br/>
         </form>
-        
-        <h2>By Country</h2>
+        <br/>
        
-       {country.name ? 
+       { country.country ? 
+        <>
+        <h2 className="display-6">{country.country} data</h2>
         <table  loading="lazy"
          className="table table-dark table-bordered table-responsive">
           <thead className="table-active">
-        <h2>{country.name} data</h2>
             <tr>
             <th scope="col">Continent</th>
             <th scope="col">Country area</th>
@@ -108,16 +121,11 @@ export default function App() {
           </tr>
           </tbody>          
         </table>
+        </>
         :
         <p>Type your country</p>
         }
-
-       {/*  <select className="form-select mb-3" 
-        onSubmit={sendQuery}        
-        aria-label=".form-select-lg example">
-         <option value={country.name}>{country.name}</option>
-        </select> */}
-
+        <br/>
     </div>
   );
 }
