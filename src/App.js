@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react'
+import {Line} from 'react-chartjs-2'
+
 
 import './App.css';
 
@@ -34,19 +36,8 @@ export default function App() {
       .catch((err) => {
         console.log(err)})
     }, [])
+
     
-
-    /*   //we put an async await to give time to load the new call
-    useEffect(() => {
-      getData()
-    }, [location])
-
-    const getData = async () => {
-        const data = await fetch(byCountry)
-        const pais = await data.json()
-        setLocation(pais)
-    } */
-
 
     //get value from select area or input area
       const countryHandler = (e) => {
@@ -59,7 +50,7 @@ export default function App() {
       // 
       const findByCountry = (countryy) =>{
         const url = `https://covid-api.mmediagroup.fr/v1/cases?country=${countryy}`
-        axios.get(byCountry)
+        axios.get(url)
         .then((res)=> {
           console.log(res.data)
           setLocation(res.data.All)
@@ -71,18 +62,45 @@ export default function App() {
       const sendQuery = (e) => {
         e.preventDefault()
        // setCountry(country)
-       findByCountry(country)
+
+       //setup the string in variable "conuntry" to make it an array
+       const arr = country.toLowerCase().split(" ")
+
+       //loop through each element of the array and capitalize the first letter
+        for (var i = 0; i < arr.length; i++){
+          arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1)
+        }
+
+        //join all the elements of the array back into a new string using a blanck space as separator
+        const str = arr.join(" ")
+        
+        //const str = country.charAt(0).toUpperCase() + country.slice(1)
+        console.log(str)
+        
+       findByCountry(str)
         console.log(location.All)
       }
 
+      //config the chart
+      const state = {
+        labels: ['Confirmed', 'Recovered', 'Deaths', 'Updated'],
+        datasets: [{
+          label: country + ' report covid-19 data',
+          fill: false,
+          data: [location.confirmed, location.recovered, location.deaths],
+          borderColor: '#000',
+          borderWidth: 2
+        }]
+      };
+
    
   return (
-    <div className="App container mt-3 mb-5 bg-dark">
+    <div className="App container mt-3 mb-5 bg-primary rounded">
       <h1 className="display-2">World Covid-19 data</h1>
 
         <h2>Global data</h2>
         <table
-        className="table table-dark table-bordered table-responsive-sm">
+        className="table table-primary table-bordered table-responsive-sm">
           <thead className="table-active">
             <tr>
             <th scope="col">Confirmed</th>
@@ -111,13 +129,14 @@ export default function App() {
           <input type="submit" value="Search" />
           <br/>
         </form>
+
         <br/>
        
        { country ? 
-        <>
+        <div className="container bg-covid">
         <h2 className="display-6">{country} data</h2>
         <table  loading="lazy"
-         className="table table-dark table-bordered table-responsive">
+         className="table table-info table-bordered table-responsive">
           <thead className="table-active">
             <tr>
             <th scope="col">Continent</th>
@@ -133,9 +152,37 @@ export default function App() {
           <td>{ location.population }</td>
           <td>{ location.life_expectancy } ~ </td>
           </tr>
-          </tbody>          
+          </tbody>
+          <thead className="table-active">
+            <tr>
+              <th>Updated</th>
+            </tr>
+          </thead>   
+          <tbody>
+            <tr>
+            <td>{ location.updated }</td>
+            </tr>
+          </tbody>     
         </table>
-        </>
+
+        <div>
+          <Line
+            data={state}
+            options={{
+              title:{
+                display:true,
+                text: 'this is the chart',
+                fontZise: 20
+              },
+              legend: {
+                display: true,
+                position: 'right'
+              }
+            }}
+           />
+        </div>
+
+        </div>
         :
         <p>Type your country</p>
         }

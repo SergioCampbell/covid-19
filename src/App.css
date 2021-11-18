@@ -1,6 +1,10 @@
 body{
   text-align: center;
-  background-color: rgb(9, 0, 34);
+  background-color: rgb(34, 0, 128);
   color: white;
 }
 
+.bg-covid{
+  background: linear-gradient(90deg, rgba(90, 164, 255), rgba(167, 132, 255));
+  border-radius: 30px;
+}
