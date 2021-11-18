@@ -5,14 +5,14 @@ import './App.css';
 
 export default function App() {
 
-  const [country, setCountry] = useState({country:''})
+  const [country, setCountry] = useState('')
   const [location, setLocation] = useState([])
   const [total, setTotal] = useState([]) 
 
   //api name
     const global = 'https://covid-api.mmediagroup.fr/v1/cases?country=Global'
 
-    const byCountry = `https://covid-api.mmediagroup.fr/v1/cases?country=${country.country}`
+    const byCountry = `https://covid-api.mmediagroup.fr/v1/cases?country=${country}`
 
     //Make petition to api
     useEffect(() =>{
@@ -25,39 +25,53 @@ export default function App() {
           console.log(err)})
     }, [])
 
-    /* useEffect(() =>{
+    useEffect(() =>{
       axios.get(byCountry)
       .then((res)=> {
-        //console.log(res)
-        setLocation(res.data.All)
+        console.log(res.data)
+        setLocation(res.data)
       })
       .catch((err) => {
         console.log(err)})
-    }, [byCountry])
-     */
+    }, [])
+    
 
+    /*   //we put an async await to give time to load the new call
     useEffect(() => {
       getData()
     }, [location])
 
-    //we put a async await to give time to load the new call
     const getData = async () => {
         const data = await fetch(byCountry)
         const pais = await data.json()
         setLocation(pais)
-    }
+    } */
+
+
     //get value from select area or input area
       const countryHandler = (e) => {
         //console.log(e.target.value)
-        setCountry({
-          ...country.country,
-          [e.target.name] : e.target.value
+        setCountry(
+           e.target.value
+        )
+      }
+
+      // 
+      const findByCountry = (countryy) =>{
+        const url = `https://covid-api.mmediagroup.fr/v1/cases?country=${countryy}`
+        axios.get(byCountry)
+        .then((res)=> {
+          console.log(res.data)
+          setLocation(res.data.All)
         })
+        .catch((err) => {
+          console.log(err)})
       }
 
       const sendQuery = (e) => {
         e.preventDefault()
-        setCountry(country)
+       // setCountry(country)
+       findByCountry(country)
         console.log(location.All)
       }
 
@@ -89,9 +103,9 @@ export default function App() {
           <p>Search your country here</p>
           <input type="text"
             name="country"
-            value={ country.country }
-            onChange={countryHandler}
-            placeholder="Colombia"
+            value={ country }
+            onChange={ countryHandler }
+            placeholder="Type a country here"
             required
           />
           <input type="submit" value="Search" />
@@ -99,9 +113,9 @@ export default function App() {
         </form>
         <br/>
        
-       { country.country ? 
+       { country ? 
         <>
-        <h2 className="display-6">{country.country} data</h2>
+        <h2 className="display-6">{country} data</h2>
         <table  loading="lazy"
          className="table table-dark table-bordered table-responsive">
           <thead className="table-active">
