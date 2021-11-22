@@ -1,3 +1,8 @@
+# World Covid 19 view
+View data form confirmed cases 
+
+![Image text](https://i.ibb.co/WgbkZ3c/Whats-App-Image-2021-11-20-at-10-42-28.jpg)
+
 # Instructivo.
 
 Ejecutar:
